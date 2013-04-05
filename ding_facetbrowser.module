@@ -159,6 +159,7 @@ function ding_facetbrowser_form($form, &$form_state, $facets = FALSE, $search = 
             '#type'          => 'checkboxes',
             '#options'       => $selected + $not_selected,
             '#default_value' => $default_values,
+            '#disabled'      => TRUE,
           );
         }
       }

@@ -93,17 +93,17 @@ function ding_facetbrowser_ctools_plugin_api($module, $api) {
 function ding_facetbrowser_form($form, &$form_state, $facets = FALSE, $search = FALSE) {
   global $base_root;
 
-  $checkboxes         = array();
-  $default_values     = array();
-  $selected = array();
-  $not_selected = array();
-
   $form['search_key'] = array(
     '#type'  => 'hidden',
     '#value' => $search,
   );
 
   foreach (variable_get('ding_facetbrowser_facets', array()) as $configured_facet) {
+    $checkboxes     = array();
+    $default_values = array();
+    $selected       = array();
+    $not_selected   = array();
+
     if (isset($facets[$configured_facet['name']])) {
       $facet = $facets[$configured_facet['name']];
 
@@ -111,7 +111,7 @@ function ding_facetbrowser_form($form, &$form_state, $facets = FALSE, $search = 
         $form[$facet->name] = array(
           '#type'        => 'fieldset',
           '#title'       => $configured_facet['title'],
-          '#attributes'  => array('id' => str_replace('.', '-', $facet->name), 'data' => array($facet->name),'count' => count($facet->terms)),
+          '#attributes'  => array('id' => str_replace('.', '-', $facet->name), 'data-count' => count($facet->terms)),
         );
 
         foreach ($facet->terms as $term_name => $term_count) {
@@ -138,9 +138,6 @@ function ding_facetbrowser_form($form, &$form_state, $facets = FALSE, $search = 
               'query' => array(
                 'facets' => array('' => $facets_string),
               ),
-              'attributes' => array(
-                'title' => $term_name,
-              ),
             ));
           }
           else {
@@ -148,9 +145,6 @@ function ding_facetbrowser_form($form, &$form_state, $facets = FALSE, $search = 
               'html' => TRUE,
               'query' => array(
                 'facets' => array('' => $facets_string),
-              ),
-              'attributes' => array(
-                'title' => $term_name,
               ),
             ));
           }
@@ -164,13 +158,6 @@ function ding_facetbrowser_form($form, &$form_state, $facets = FALSE, $search = 
         }
       }
     }
-
-    // Reset previous set variables
-    $checkboxes     = array();
-    $default_values = array();
-    $selected       = array();
-    $not_selected   = array();
-
   }
 
 

@@ -122,6 +122,10 @@ function ding_facetbrowser_form($form, &$form_state, $facets = FALSE, $search = 
           ),
         );
 
+        if (empty($configured_facet['sorting'])) {
+          $configured_facet['sorting'] = NULL;
+        }
+
         switch ($configured_facet['sorting']) {
           case 'alphabetical':
             ksort($facet->terms);
@@ -136,7 +140,6 @@ function ding_facetbrowser_form($form, &$form_state, $facets = FALSE, $search = 
             krsort($facet->terms, SORT_NUMERIC);
             break;
           default:
-
             break;
         }
 
@@ -310,7 +313,7 @@ function ding_facetbrowser_block_view($delta = FALSE) {
     $results = module_invoke($executed_search_module, 'ding_facetbrowser');
     if (is_object($results)) {
       foreach ($results->facets as $result) {
-        if (count($result->terms) == TRUE) {
+        if (count($result->terms)) {
           $content_in_facet = TRUE;
           break;
         }

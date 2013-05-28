@@ -187,6 +187,10 @@ function ding_facetbrowser_form($form, &$form_state, $facets = FALSE, $search = 
     }
   }
 
+  $form['submit'] = array(
+    '#type'  => 'submit',
+    '#value' => t('Submit'),
+  );
   return $form;
 }
 

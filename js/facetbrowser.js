@@ -56,7 +56,7 @@
     var main_element = $(Drupal.settings.dingFacetBrowser.mainElement);
 
     // Add show more button to each facet group and hide some terms.
-    main_element.find('fieldset.form-wrapper').each(function() {
+    main_element.find('fieldset').each(function() {
       var facetGroup = $(this);
 
       // Limit the number of visible terms in the group.
@@ -75,13 +75,11 @@
       facetGroup.find('.form-type-checkbox input:checked').parent().addClass('selected-checkbox');
       facetGroup.find('.form-type-checkbox input:not(:checked)').parent().addClass('unselected-checkbox');
 
-      // Add some div wrappers around selected and unselected checkboxes.
-      facetGroup.find('.selected-checkbox').wrapAll('<div class="selected-checkbox-group" />');
-      facetGroup.find('.unselected-checkbox').wrapAll('<div class="unselected-checkbox-group" />');
-
       // Add a unselect all link.
       if (facetGroup.find('.selected-checkbox-group').length) {
         facetGroup.find('.selected-checkbox-group').append('<a href="#" class="unselect">' + Drupal.t('Remove all selected') + '</a>');
+        facetGroup.find('legend').addClass('active');
+        facetGroup.find('.fieldset-wrapper').css('display', 'block');
       }
 
     });

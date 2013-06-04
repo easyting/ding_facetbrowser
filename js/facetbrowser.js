@@ -1,5 +1,3 @@
-var id = 0;
-
 (function($) {
 
   Drupal.behaviors.facetbrowser = {
@@ -57,6 +55,7 @@ var id = 0;
 
     var main_element = $(Drupal.settings.dingFacetBrowser.mainElement);
 
+    var id = 0;
     // Add show more button to each facet group and hide some terms.
     main_element.find('fieldset').each(function() {
       var facetGroup = $(this);

@@ -127,7 +127,7 @@ function ding_facetbrowser_elements($facets = FALSE, $search = FALSE) {
 
               break;
           }
-        }  
+        }
         foreach ($facet->terms as $term_name => $term_count) {
           $facet_name = explode('.', $facet->name);
           $element_name = end($facet_name);
@@ -164,21 +164,42 @@ function ding_facetbrowser_elements($facets = FALSE, $search = FALSE) {
           }
         }
 
-        $output .= '<fieldset id="' . str_replace(".", "-", $facet->name) . '" data-count="' . count($facet->terms) . '" class="form-wrapper"> <legend><span class="fieldset-legend">' . t($configured_facet['title']) . '</span></legend>';
-        $output .= '<div class="fieldset-wrapper"> <div id="edit-' . $facet->name . '" class="form-checkboxes">';
+        $output .= '<fieldset id="' . str_replace(".", "-", $facet->name);
+        $output .= '" data-count="' . count($facet->terms);
+        $output .= '" class="form-wrapper">';
+        $output .= ' <legend><span class="fieldset-legend">' ;
+        $output .= t($configured_facet['title']) . '</span></legend>';
+        $output .= '<div class="fieldset-wrapper"> <div id="edit-';
+        $output .= $facet->name . '" class="form-checkboxes">';
+        $title = t($configured_facet['title']);
         if (count($selected) > 0) {
           $output .= '<div class="selected-checkbox-group">';
           foreach ($selected as $key => $value) {
-          $output .= '<div class="form-item form-type-checkbox form-item-' . $facet->name . '-' . $key . ' form-disabled selected-checkbox">
-                  <input disabled="disabled" type="checkbox" id="edit-' . $facet->name . '-' . $key . '" name="' . $facet->name . '[' . $key . ']" value="' . $key . '" class="form-checkbox"><label class="option" for="edit-' . $facet->name . '-' . $key . '">' . $value . '</label></div>';
+            $output .= '<div class="form-item form-type-checkbox form-item-';
+            $output .= $facet->name . '-' . $key;
+            $output .= ' form-disabled selected-checkbox">';
+            $output .= '<input disabled="disabled" checked="checked "';
+            $output .= 'type="checkbox" id="edit-';
+            $output .=  $facet->name . '-' . $key . '" name="' . $facet->name;
+            $output .= '[' . $key . ']" value="' . $key;
+            $output .= '" class="form-checkbox">';
+            $output .= '<label class="option" for="edit-' . $facet->name . '-';
+            $output .= $key . '">' . $value . '</label></div>';
           }
           $output .= '</div>';
-        }       
+        }
         if (count($not_selected) > 0) {
           $output .= '<div class="unselected-checkbox-group">';
           foreach ($not_selected as $key => $value) {
-          $output .= '<div class="form-item form-type-checkbox form-item-' . $facet->name . '-' . $key . ' form-disabled unselected-checkbox">
-                  <input disabled="disabled" type="checkbox" id="edit-' . $facet->name . '-' . $key . '" name="' . $facet->name . '[' . $key . ']" value="' . $key . '" class="form-checkbox"><label class="option" for="edit-' . $facet->name . '-' . $key . '">' . $value . '</label></div>';
+            $output .= '<div class="form-item form-type-checkbox form-item-';
+            $output .= $facet->name . '-' . $key;
+            $output .= ' form-disabled unselected-checkbox">';
+            $output .= '<input disabled="disabled" type="checkbox" id="edit-';
+            $output .=  $facet->name . '-' . $key . '" name="' . $facet->name;
+            $output .= '[' . $key . ']" value="' . $key;
+            $output .= '" class="form-checkbox">';
+            $output .= '<label class="option" for="edit-' . $facet->name . '-';
+            $output .= $key . '">' . $value . '</label></div>';
           }
           $output .= '</div>';
         }
@@ -190,8 +211,8 @@ function ding_facetbrowser_elements($facets = FALSE, $search = FALSE) {
   }
 
   return  array(
-               '#type' => 'markup',
-               '#markup' => $output,
+              '#type' => 'markup',
+              '#markup' => $output,
             );
 }
 
@@ -278,7 +299,9 @@ function theme_facetbrowser($search_result = FALSE) {
   $searchkey = array_shift($search_result);
   $elements = array();
   if (is_array($all_facets)) {
-    $elements[] = drupal_render(ding_facetbrowser_elements($all_facets, $searchkey));
+    $facet_elements = ding_facetbrowser_elements($all_facets, $searchkey);
+    drupal_render(&$facet_elements);
+    $elements[] = $facet_elements;
   }
   return implode('', $elements);
 }

@@ -299,7 +299,8 @@ function theme_facetbrowser($search_result = FALSE) {
   $searchkey = array_shift($search_result);
   $elements = array();
   if (is_array($all_facets)) {
-    $elements[] = drupal_render(ding_facetbrowser_elements($all_facets, $searchkey));
+    $facet = ding_facetbrowser_elements($all_facets, $searchkey);
+    $elements[] = drupal_render($facet);
   }
   return implode('', $elements);
 }

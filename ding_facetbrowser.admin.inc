@@ -14,7 +14,7 @@ function ding_facetbrowser_settings($form_state) {
   form_load_include($form_state, 'inc', 'ding_facetbrowser', 'ding_facetbrowser.admin');
   $form = array();
   $facets = variable_get('ding_facetbrowser_facets', array());
-  
+
   $form['description'] = array(
     '#markup' => '<p>' . t('Configure facets shown in the facetbrowser. Facet names can be found at <a href="http://oss.dbc.dk/wiki/bin/view/Databroend/OpenSearchDocIndexes">DBC wiki</a> and is usually named <em>facet.something</em>.') . '</p>',
   );
@@ -36,7 +36,7 @@ function ding_facetbrowser_settings($form_state) {
     '#options' => drupal_map_assoc(range(1, 15)),
     '#default_value' => $number_of_terms,
   );
-  
+
   $form['ding_facetbrowser_facets'] = array(
     '#tree' => TRUE,
     '#weight' => -20,
@@ -48,6 +48,7 @@ function ding_facetbrowser_settings($form_state) {
       '#type' => 'textfield',
       '#title' => t('Facet id'),
       '#title_display' => 'invisible',
+      '#size' => 30,
       '#default_value' => $facet['name'],
     );
 
@@ -55,7 +56,13 @@ function ding_facetbrowser_settings($form_state) {
       '#type' => 'textfield',
       '#title' => t('Title'),
       '#title_display' => 'invisible',
+      '#size' => 30,
       '#default_value' => $facet['title'],
+    );
+
+    $form['ding_facetbrowser_facets'][$i]['expanded'] = array(
+      '#type' => 'checkbox',
+      '#default_value' => isset($facet['expanded']) ? $facet['expanded'] : 0,
     );
 
     $form['ding_facetbrowser_facets'][$i]['sorting'] = array(
@@ -93,13 +100,20 @@ function ding_facetbrowser_settings($form_state) {
   $form['ding_facetbrowser_facets'][$i]['name'] = array(
     '#type' => 'textfield',
     '#title' => t('Facet id'),
+    '#size' => 30,
     '#default_value' => '',
   );
 
   $form['ding_facetbrowser_facets'][$i]['title'] = array(
     '#type' => 'textfield',
     '#title' => t('Title'),
+    '#size' => 30,
     '#default_value' => '',
+  );
+
+  $form['ding_facetbrowser_facets'][$i]['expanded'] = array(
+    '#type' => 'checkbox',
+    '#default_value' => 0,
   );
 
   $form['ding_facetbrowser_facets'][$i]['sorting'] = array(
@@ -166,6 +180,7 @@ function theme_ding_facetbrowser_settings($variables) {
     $row = array();
     $row[] = drupal_render($facet['name']);
     $row[] = drupal_render($facet['title']);
+    $row[] = drupal_render($facet['expanded']);
     $row[] = drupal_render($facet['sorting']);
     $row[] = drupal_render($facet['weight']);
     $row[] = drupal_render($facet['delete']);
@@ -175,8 +190,22 @@ function theme_ding_facetbrowser_settings($variables) {
     );
   }
 
-  $header = array(t('Name'), t('Title'), t('Facet name sorting'), t('Weight'), t('Operations'));
-  $output = theme('table', array('header' => $header, 'rows' => $rows, 'attributes' => array('id' => 'facets')));
+  $header = array(
+    t('Name'),
+    t('Title'),
+    t('Expanded'),
+    t('Facet name sorting'),
+    t('Weight'),
+    t('Operations'),
+  );
+  $output = theme(
+    'table',
+    array(
+      'header' => $header,
+      'rows' => $rows,
+      'attributes' => array('id' => 'facets'),
+    )
+  );
   $output .= drupal_render($form['actions']);
   $output = drupal_render_children($form) . $output;
   return $output;

@@ -63,15 +63,15 @@
       // Limit the number of visible terms in the group.
       var number_of_terms = Drupal.settings.dingFacetBrowser.number_of_terms;
       var terms_not_checked = facetGroup.find('.form-type-checkbox input:not(:checked)');
-      if (terms_not_checked.size() > number_of_terms) {
-        terms_not_checked.slice(number_of_terms).parent().hide();
-      }
-
-      // Add expand button, if there are more to show.
       if (terms_not_checked.length > number_of_terms) {
+        terms_not_checked.slice(number_of_terms).parent().hide();
+
+        // Add expand button, if there are more to show.
         facetGroup.append('<a href="#" class="expand expand-more" id="expand_more_' + (id++) + '">' + Drupal.t('Show more') + '</a>');
+
         // If there are selected elemends show "Show more" inline.
-        if (facetGroup.find('.selected-checkbox-group').length) {
+        // Also show it if the facet is unfolded by default.
+        if (facetGroup.find('.selected-checkbox-group').length || facetGroup.find('legend.active').length) {
           facetGroup.find('.expand').css('display', 'inline');
         }
       }
@@ -80,7 +80,7 @@
       facetGroup.find('.form-type-checkbox input:checked').parent().addClass('selected-checkbox');
       facetGroup.find('.form-type-checkbox input:not(:checked)').parent().addClass('unselected-checkbox');
 
-      // Add a unselect all link.
+      // Add a "unselect all" link and unfold facet.
       if (facetGroup.find('.selected-checkbox-group').length) {
         facetGroup.append('<a href="#" class="unselect" >' + Drupal.t('Remove all selected') + '</a>');
         facetGroup.find('legend').addClass('active');
@@ -102,7 +102,7 @@
       var facetId = clickedKey.id.split('expand_more_');
       var expandMoreStr = 'expand_more_' + facetId[1];
       var expandLessStr = 'expand_less_' + facetId[1];
-   
+
       facetGroup.find('.form-type-checkbox.unselected-checkbox:' + (clickedKey.id == expandMoreStr ? 'hidden': 'visible')).each(function(count, facetElement) {
         if (clickedKey.id == expandMoreStr && count < Drupal.settings.dingFacetBrowser.number_of_terms) {
           $(facetElement).slideDown('fast', function() {
